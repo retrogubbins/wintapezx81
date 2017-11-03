@@ -1,0 +1,239 @@
+Program:
+Wintape
+
+Release:
+1.1
+
+Date:
+19 July 2000
+
+
+Operating System:
+Windows 95/98 NT (333MHz Celeron Test System 96Mb RAM)
+
+Author:
+C.Peter.D. Todd
+
+Purpose:
+
+1. Reads .RAW 22.050kHz 8-bit audio files recorded with ZX81 programs
+2. Reads .P files used for Xtender (& others)
+
+3. Writes .P program files for use with Xtender emulator (& others)
+
+
+
+
+Additional Files:
+
+VALLEY.P an example ZX81 prog by J.R.L. Todd
+VALLEY.RAW an example of a nasty tape recording
+
+
+Acknowledgements:	Steven McDonald - ZXD/ZXC coders
+			Jack Raats - ZX81LIST listings
+			R. J. Marks - P2TXT listings
+			Carlo Delhez - Xtender in general
+
+
+-------------------------------------------
+INTRODUCTION
+-------------------------------------------
+
+Hi There,
+
+this is the first release of Wintape, a program that
+I was as surprised to find myself writing as you
+probably are to find it has been written :)
+
+Why Bother?
+
+Well, you see I had these tapes in the attic...
+
+The tapes I retrieved were terrible, signal to noise was
+very poor and there were nasty spikes in the data caused
+by some unknown interference on whatever 1982 cassette
+recorder I was using when 11.
+
+I found Steve McDonalds ZXC/D coders on the web and reverse engineered the ZX81
+tape format (mostly, I'd still like to know the full story).
+Adding in the filter improved the reliability considerably
+however there were several areas where tape dropout had
+really got the upper hand. Hence a move to windows and
+the chance to move through the listing looking for errors
+crossreferenced with the audio samples.
+
+
+Wintape is a program for converting .raw audio files 
+into .P files which can be used in the Xtender series
+of emulators (and others). The .raw file is
+recorded from a tape of your ZX81 masterpeice
+played into the input of your Soundblaster card and
+sampled in programs like Wave for Windows or SoundForge.
+
+
+--------------------------------------------------
+SAMPLING THE TAPE
+--------------------------------------------------
+
+Record the tape in your favourite sampler at 22050Hz
+8-bits, try to get maximum signal to noise and match
+the dynamic range to the input of the soundblaster card,
+make certain no clipping occurs during recording.
+
+Remove most of the leader (except for a hundred samples or so)
+and any trailing noise at the end.
+
+DC restore the data
+
+Normalise the data to the highest peak in the data
+
+Save it in .RAW format! 
+
+--------------------------------------------------
+READING THE WAV FILE
+--------------------------------------------------
+
+Boot up Wintape, load in the RAW file and click on
+READ TAPE, after several seconds (or more...) you
+hopefully should get a listing of the ZX81 program
+in the left hand window and a load of gibberish in
+the right hand window.
+
+HINT: the bytes counter should say something approaching
+ the length of the program and the system variables
+should look vaguely sensible, usually I found that
+STKBOT = STKEND but whether this is always the case
+I don't know.
+
+
+--------------------------------------------------
+WRITING THE P FILE
+--------------------------------------------------
+
+If all has gone well, the listing and variables look
+good, just click on SAVE P-FILE and that's it.
+
+
+
+--------------------------------------------------
+PROBLEMS
+--------------------------------------------------
+Well, if no listing appeared there could be several...
+
+1.
+Make sure the recording is good, ie: if you look at
+it can you work out yourself if there's 1s and 0s
+(long and short bits). If you can't really tell then
+try recording again or give up and put the tape back
+into storage. The only things I know of which may possibly
+save such a tape is a two stage convolution filter, 
+a wavelet transform or a matched filter... and 
+implementing them pushes nostalgia too far.
+
+2.
+The ERRORS value shows places where Wintape had to
+fix an error in the file, you may still have a large
+number even though you can save a valid P-FILE.
+The number is useful for reducing errors prior
+to hand editing:
+
+The CYCLES value shows the number of individual
+wave cycles found in the data, a cycle is defined
+as the low-high transition at the threshold point 
+set by TRIG-THRESH.
+
+If the silent parts of the signal are pretty clean
+you should be able to get a valid listing by experimenting
+with the tape reader controls:
+
+The reader works by looking for 1s and 0s based on
+different numbers of wave cycles. Usually I found 
+4 cycles for a 0 and 9 cycles for a 1 but don't quote
+me on it. It recognises a silent break between bits
+by waiting until CYCLE-THRESH samples have lapsed
+with no wave cycles.
+
+
+Try tweaking the CYCLE-THRESH value
+
+Try the filter - its a very rough and ready solution
+which removes cycles which have no neighbours within
+SPIKE FILTER  sample points.
+
+Try rectifying the data (you will have to alter the
+number of ONE-CYCLES and ZERO-CYCLES)
+
+Try inverting the data (on some of my tapes the
+dropouts were all negative)
+
+3.
+If nothing else works then you'll have to resort 
+to hand editing the RAW file to retrieve the program.
+Wintape can help in this:
+
+With the RAW file loaded and read use the right hand
+window (showing the individual bytes found on the
+tape) to step through the recording. The lower
+window shows the bits that were found to make up
+the current byte. Spotting errors is usually pretty
+easy.
+
+When you find an error the sample point is shown
+in the top left corner with the byte number and value
+you can select this number text and cut and paste
+it into the GOTO box on your sampling program
+to go straight to the correct edit point (plus
+or minus a few hundred samples)
+
+Usually increasing or decreasing the volume
+is all that's required to get rid of dropouts,
+in some cases you have to cut and paste individual
+bits from one point in the file to the other, but
+then you're supposed to be enjoying this...
+
+Keep clicking on READ TAPE to update the listing,
+sometimes it just magically falls into place.
+
+ANOTHER HINT:
+The filename and system variable parts (112 bytes +) at the
+start of the program need to be perfect for you to 
+get a sensible listing, you can be pretty certain
+that they're right when the first line of the
+program looks okay in the left hand window and
+the system variables values aren't outrageous.
+
+--------------------------------------------------
+FINALLY
+--------------------------------------------------
+Thanks for downloading the program, the first
+I've written in VB and also the first I've put
+out on the web.
+
+The VALLEY is an old proggy written by my brother,
+for those who are interested the direction keys
+surround the W (ie 1 is move up and left)
+The fighting keys are L,B,H for legs,body and head
+(you can parry blows as well)
+Spells can be cast using S followed by 1,2 or 3
+
+
+==================================================
+This program is Freeware, yer can av it mate, and
+if anyone is interested in the source then by
+all means drop me an email. No probs.
+
+Known Problems:
+The code isn't the greatest, it loads in the whole
+wave file at once, uses tons of memory and some
+of the algorithms need speeding up, but then
+doesn't everything...
+
+
+Comments and suggestions to:-
+
+email: heraclion@talktalk.net
+
+
+
+  
